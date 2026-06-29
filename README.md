@@ -95,14 +95,6 @@ During a live interview, press **Shift+D** to toggle the debug panel:
 - Memory log (stored + recalled facts)
 - Last LLM evaluation (quality, STAR scores, follow-up reasoning)
 
-## Deploy
-
-```bash
-vercel --prod
-```
-
-`postinstall` runs `prisma generate` automatically on each Vercel deploy.
-
 ## User Journey
 
 ```
