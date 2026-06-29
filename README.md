@@ -95,13 +95,7 @@ During a live interview, press **Shift+D** to toggle the debug panel:
 - Memory log (stored + recalled facts)
 - Last LLM evaluation (quality, STAR scores, follow-up reasoning)
 
-## User Journey
 
-```
-Landing → Dashboard → Preparation → Interview → Report
-```
-
-The **Preparation screen** (`/prepare/[templateId]`) shows the competencies being evaluated, interview details, and rotating tips before the session is created. This is where the candidate mentally prepares — and where the session is created only on explicit intent.
 
 ## Project Structure
 
