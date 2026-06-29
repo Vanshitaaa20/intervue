@@ -2,7 +2,23 @@
   "permissions": {
     "allow": [
       "Bash(npx create-next-app@latest intervue --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git)",
-      "PowerShell(Get-Content \"C:\\\\Users\\\\vansh\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vansh-intervue\\\\2ac85681-0b24-4f8d-9aac-0ebeff85418b\\\\tasks\\\\bo4tsgl30.output\" -Wait -Tail 20 2>&1)"
+      "PowerShell(Get-Content \"C:\\\\Users\\\\vansh\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vansh-intervue\\\\2ac85681-0b24-4f8d-9aac-0ebeff85418b\\\\tasks\\\\bo4tsgl30.output\" -Wait -Tail 20 2>&1)",
+      "PowerShell(cd C:\\\\Users\\\\vansh\\\\intervue; $env:DATABASE_URL=\"postgresql://postgres:vanshitaaa20@db.rpptwgahanxuybankdvn.supabase.co:5432/postgres\"; npx tsx prisma/seed.ts 2>&1)",
+      "PowerShell(cd C:\\\\Users\\\\vansh\\\\intervue; $env:DATABASE_URL=\"postgresql://postgres:vanshitaaa20@db.rpptwgahanxuybankdvn.supabase.co:5432/postgres\"; npx prisma studio 2>&1 | Select-Object -First 5)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3000/api/interview/templates\" -Method GET)",
+      "mcp__Claude_Preview__preview_start",
+      "PowerShell(Stop-Process -Id 19700 -Force 2>$null)",
+      "WebFetch(domain:api.pinterest.com)",
+      "WebFetch(domain:www.pinterest.com)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "Bash(ls \"C:\\\\Users\\\\vansh\\\\Downloads\\\\\" | grep -i \"work_sans\\\\|hoves\")",
+      "Bash(unzip -l \"Work_Sans.zip\")",
+      "PowerShell(Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead\\(\"C:\\\\Users\\\\vansh\\\\Downloads\\\\Work_Sans.zip\"\\); $entry = $zip.Entries | Where-Object { $_.Name -eq \"WorkSans-VariableFont_wght.ttf\" }; [System.IO.Compression.ZipFileExtensions]::ExtractToFile\\($entry, \"C:\\\\Users\\\\vansh\\\\intervue\\\\public\\\\fonts\\\\WorkSans-Variable.ttf\", $true\\); $zip.Dispose\\(\\))",
+      "PowerShell(Stop-Process -Id 14208 -Force -ErrorAction SilentlyContinue)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(grep -v \"^$\")"
     ]
   }
 }

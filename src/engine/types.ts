@@ -83,6 +83,7 @@ export interface CandidateProfile {
 
 export interface InterviewTemplate {
   id: string;
+  slug?: string;
   title: string;
   role: string;
   duration: number; // minutes

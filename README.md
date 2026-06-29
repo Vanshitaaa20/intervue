@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Intervue
+
+An AI-powered behavioral interview platform that thinks like a senior hiring manager.
+
+## Architecture
+
+```
+Candidate Voice
+    ↓
+  Vapi (voice streaming only)
+    ↓
+/api/vapi/webhook  ← Custom LLM endpoint
+    ↓
+Single LLM Call (Claude claude-sonnet-4-6, structured JSON)
+    ↓
+Deterministic TypeScript Reducers
+    ↓
+Updated InterviewState → persisted to Postgres
+    ↓
+Spoken response streamed back to Vapi
+```
+
+**One LLM call per turn. No exceptions.** Everything else — coverage tracking, difficulty adjustment, memory, stage transitions, report generation — is pure TypeScript.
+
+## Interview Engine (`src/engine/`)
+
+Zero framework dependencies. Fully testable in isolation.
+
+| Module | Responsibility |
+|---|---|
+| `state.ts` | `InterviewState` initializer |
+| `coverage-planner.ts` | Competency coverage + advancement logic |
+| `answer-evaluator.ts` | Builds the LLM system prompt per turn |
+| `decision-reducer.ts` | Applies structured LLM output → next state |
+| `memory-manager.ts` | Salient fact storage + recall selection |
+| `difficulty-controller.ts` | Difficulty ramp (1–5) from answer quality |
+| `question-generator.ts` | Opening question prompts per competency |
+| `report-generator.ts` | Derives full report from final state (no LLM) |
+
+## Tech Stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js App Router |
+| Language | TypeScript (strict) |
+| Database | PostgreSQL via Supabase + Prisma |
+| LLM | Anthropic Claude Sonnet |
+| Voice | Vapi (Custom LLM mode) |
+| Auth | JWT + bcrypt |
+| UI | TailwindCSS v4 + Framer Motion |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install
+
+```bash
+git clone <repo> && cd intervue
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env.local
+# Fill in: DATABASE_URL, JWT_SECRET, ANTHROPIC_API_KEY, NEXT_PUBLIC_VAPI_API_KEY, NEXT_PUBLIC_APP_URL
+```
+
+### 3. Database setup
+
+```bash
+npm run db:push    # Push Prisma schema to Supabase
+npm run db:seed    # Seed interview templates
+```
+
+### 4. Dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 5. Configure Vapi
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create an assistant in [Vapi dashboard](https://dashboard.vapi.ai)
+2. Set LLM provider → **Custom LLM**
+3. URL: `https://your-domain.vercel.app/api/vapi/webhook`
+4. Pass `metadata.sessionId` when starting a call
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Developer Debug Mode
 
-## Learn More
+During a live interview, press **Shift+D** to toggle the debug panel:
 
-To learn more about Next.js, take a look at the following resources:
+- Interview state (stage, turn, difficulty)
+- Competency coverage %
+- Memory log (stored + recalled facts)
+- Last LLM evaluation (quality, STAR scores, follow-up reasoning)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+vercel --prod
+```
 
-## Deploy on Vercel
+`postinstall` runs `prisma generate` automatically on each Vercel deploy.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## User Journey
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+Landing → Dashboard → Preparation → Interview → Report
+```
+
+The **Preparation screen** (`/prepare/[templateId]`) shows the competencies being evaluated, interview details, and rotating tips before the session is created. This is where the candidate mentally prepares — and where the session is created only on explicit intent.
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── (auth)/          # Login, Register
+│   ├── (app)/
+│   │   ├── dashboard/   # Template selection + past sessions
+│   │   ├── prepare/     # Pre-interview briefing screen
+│   │   ├── interview/   # Live voice interview
+│   │   └── report/      # Post-interview performance report
+│   └── api/             # Route handlers
+│       ├── auth/
+│       ├── interview/
+│       └── vapi/webhook # Custom LLM endpoint
+├── engine/              # Pure interview engine — no React, no Next
+├── features/
+│   ├── auth/
+│   ├── interview/       # VoiceOrb, TranscriptPanel, CompetencyProgress
+│   └── debug/           # DebugPanel (Shift+D)
+└── lib/                 # prisma.ts, jwt.ts, llm.ts, errors.ts
+```

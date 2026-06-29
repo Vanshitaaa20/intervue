@@ -112,9 +112,12 @@ export function applyTurnOutput(
     events.push({
       turn: state.turn,
       event: "competency_advanced",
-      reason: `Coverage reached ${next.competencyStates[next.currentCompetency].coverage}% → moving to ${nextCompetency}`,
+      reason: `Coverage ${Math.round(next.competencyStates[next.currentCompetency].coverage)}% after ${next.competencyStates[next.currentCompetency].turnsSpent} turns → advancing`,
     });
-    next = { ...next, currentCompetency: nextCompetency };
+    // "__done__" sentinel means all competencies are finished
+    if (nextCompetency !== "__done__" as any) {
+      next = { ...next, currentCompetency: nextCompetency };
+    }
   }
 
   // 9. Advance interview stage

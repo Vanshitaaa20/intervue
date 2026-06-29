@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "prisma generate && next build",
+  "installCommand": "npm install",
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret",
+    "ANTHROPIC_API_KEY": "@anthropic_api_key",
+    "VAPI_API_KEY": "@vapi_api_key"
+  }
+}

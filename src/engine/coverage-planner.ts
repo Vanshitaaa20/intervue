@@ -6,11 +6,15 @@ import type {
 } from "./types";
 
 const QUALITY_COVERAGE_DELTA: Record<AnswerQuality, number> = {
-  poor: 10,
-  fair: 20,
-  good: 35,
-  excellent: 50,
+  poor: 8,
+  fair: 18,
+  good: 30,
+  excellent: 42,
 };
+
+// Minimum turns before a competency can be marked complete, regardless of coverage.
+// Prevents a single "excellent" answer from rushing past a competency.
+const MIN_TURNS_BEFORE_ADVANCE = 2;
 
 // Returns the next competency to move to, or null if current should continue
 export function getNextCompetency(state: InterviewState): Competency | null {
@@ -18,6 +22,9 @@ export function getNextCompetency(state: InterviewState): Competency | null {
   const currentState = state.competencyStates[state.currentCompetency];
 
   if (!config) return null;
+
+  // Never advance before minimum turns — the interviewer must probe at least twice
+  if (currentState.turnsSpent < MIN_TURNS_BEFORE_ADVANCE) return null;
 
   const shouldAdvance =
     currentState.coverage >= 80 ||
@@ -34,7 +41,8 @@ export function getNextCompetency(state: InterviewState): Competency | null {
         state.competencyStates[c].coverage < 80
     );
 
-  return remaining[0] ?? null;
+  // Even if no remaining competencies, mark current complete so allDone fires correctly
+  return remaining[0] ?? "__done__" as Competency;
 }
 
 export function applyAnswerToCoverage(
@@ -43,7 +51,10 @@ export function applyAnswerToCoverage(
   competencySignal: number // -1 to 1
 ): InterviewState {
   const current = state.competencyStates[state.currentCompetency];
-  const delta = QUALITY_COVERAGE_DELTA[quality] * Math.max(0, competencySignal);
+  // Use abs(competencySignal) so even negatively-framed answers that demonstrate
+  // the competency still contribute — the quality score captures actual performance
+  const signalBoost = Math.max(0.3, Math.abs(competencySignal));
+  const delta = QUALITY_COVERAGE_DELTA[quality] * signalBoost;
 
   const updated: typeof current = {
     ...current,
