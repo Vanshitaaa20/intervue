@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest intervue --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git)",
+      "PowerShell(Get-Content \"C:\\\\Users\\\\vansh\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vansh-intervue\\\\2ac85681-0b24-4f8d-9aac-0ebeff85418b\\\\tasks\\\\bo4tsgl30.output\" -Wait -Tail 20 2>&1)"
+    ]
+  }
+}
