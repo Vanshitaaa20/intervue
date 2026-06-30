@@ -37,7 +37,7 @@ export function useVapi({ sessionId, onTranscript, onStateUpdate, onEnd }: UseVa
     vapi.on("volume-level", (level: number) => setVolumeLevel(level));
 
     vapi.on("message", (msg: any) => {
-      if (msg.type === "transcript") {
+      if (msg.type === "transcript" && msg.transcriptType === "final") {
         onTranscript?.(msg.transcript, msg.role);
       }
 
@@ -68,6 +68,8 @@ export function useVapi({ sessionId, onTranscript, onStateUpdate, onEnd }: UseVa
       },
       firstMessage:
         "Hello, I'm ready to begin. Please go ahead and introduce yourself.",
+      silenceTimeoutSeconds: 120,
+      maxDurationSeconds: 3600,
     });
   }, [sessionId, onTranscript, onStateUpdate, onEnd]);
 
