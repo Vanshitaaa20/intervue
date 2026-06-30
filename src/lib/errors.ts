@@ -14,7 +14,8 @@ export function errorResponse(error: unknown) {
     return NextResponse.json({ error: error.message }, { status: error.statusCode });
   }
   console.error(error);
-  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  const message = error instanceof Error ? error.message : String(error);
+  return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
 }
 
 export function unauthorized() {
