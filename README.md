@@ -24,7 +24,6 @@ Spoken response streamed back to Vapi
 
 ## Interview Engine (`src/engine/`)
 
-Zero framework dependencies. Fully testable in isolation.
 
 | Module | Responsibility |
 |---|---|
