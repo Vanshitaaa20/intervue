@@ -2,7 +2,6 @@
 
 An AI-powered behavioral interview platform that thinks like a senior hiring manager.
 
-## Architecture
 
 ```
 Candidate Voice
