@@ -87,8 +87,6 @@ npm run dev
 
 ## Developer Debug Mode
 
-During a live interview, press **Shift+D** to toggle the debug panel:
-
 - Interview state (stage, turn, difficulty)
 - Competency coverage %
 - Memory log (stored + recalled facts)
